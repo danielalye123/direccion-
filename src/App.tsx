@@ -20,8 +20,8 @@ export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [topic, setTopic] = useState('');
-  const [isSetup, setIsSetup] = useState(true);
+  const [topic, setTopic] = useState('Motivación Empresarial');
+  const [isSetup, setIsSetup] = useState(false); // Iniciar directamente en el chat personalizado
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -30,25 +30,29 @@ export default function App() {
   };
 
   useEffect(() => {
+    // Mensaje de bienvenida inicial
+    if (messages.length === 0) {
+      setMessages([
+        {
+          id: '1',
+          role: 'model',
+          text: `¡Hola! Soy tu asistente de **Dirección Empresarial I**. He analizado los materiales sobre **Mapas Estratégicos (Kaplan & Norton)** y motivación organizacional. 
+
+Estoy listo para ayudarte a entender cómo movilizar energía humana, alinear intereses y crear ventaja competitiva a través del liderazgo. 
+
+¿Quieres que hablemos sobre teorías clásicas, inteligencia emocional o cómo aplicar la motivación en casos reales?`,
+          timestamp: getCurrentTime(),
+        },
+      ]);
+    }
+  }, []);
+
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const getCurrentTime = () => {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
-
-  const handleStart = () => {
-    if (topic.trim()) {
-      setIsSetup(false);
-      setMessages([
-        {
-          id: '1',
-          role: 'model',
-          text: `Hola. He analizado los parámetros de nuestro agente enfocado en **${topic}**. Estoy listo para profundizar en cualquier autor o corriente que desees explorar. ¿Por dónde te gustaría empezar hoy?`,
-          timestamp: getCurrentTime(),
-        },
-      ]);
-    }
   };
 
   const handleSend = async () => {
@@ -72,9 +76,23 @@ export default function App() {
     
     history.push({ role: 'user', parts: [{ text: input }] });
 
-    const systemInstruction = `Eres un experto amable y servicial especializado en el tema: ${topic}. 
-    Responde siempre en español. Mantén un tono minimalista, profesional y sumamente claro. 
-    Utiliza formato Markdown.`;
+    const systemInstruction = `Eres un experto académico y consultor en Dirección Empresarial I, especializado en Motivación y Liderazgo. 
+    
+    CONTEXTO CLAVE:
+    - La motivación se relaciona con la función de DIRECCIÓN: influir en empleados para alinear sus intereses con la empresa.
+    - El ciclo de managment incluye: Gestión, Comunicación y Motivación.
+    - Definición de motivación: Factores que impulsan a actuar y mantenerse orientado a una meta. No es solo "animar", es crear condiciones de compromiso.
+    - Un gerente administra ENERGÍA HUMANA, no solo tareas.
+    - Tipos: Extrínseca (Salario, bonos - corto plazo) vs Intrínseca (Sentido del trabajo, autonomía, aprendizaje, crecimiento - sostenible).
+    - Liderazgo: Basado en Inteligencia Emocional (Goleman). Un líder motivado tiene pasión e inspira.
+    - Relación con competitividad: Las empresas exitosas motivan mejor. La motivación impacta en calidad, eficiencia y ventaja competitiva.
+    - Frase clave: "Gerencia sin habilidades humanas es administración de papeles, no de personas."
+    - Referencia bibliográfica: Mapas Estratégicos de Kaplan y Norton (Alineación de Activos Intangibles: Capital Humano, Información y Capital Organizacional).
+    
+    TONO:
+    - Profesional, minimalista, académico pero cercano.
+    - Utiliza Markdown (negritas, listas, citas).
+    - Responde siempre en español.`;
 
     const aiResponseText = await getChatResponse(history, systemInstruction);
 

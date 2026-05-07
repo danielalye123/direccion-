@@ -1,6 +1,6 @@
 {
-  "name": "Agente Temático Inteligente",
-  "description": "Un agente de IA especializado con el que puedes conversar sobre cualquier tema.",
+  "name": "Agente de Dirección Empresarial",
+  "description": "Asistente experto en Motivación Empresarial y Liderazgo, basado en materiales de Dirección Empresarial I.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }
